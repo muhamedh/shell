@@ -4,6 +4,8 @@
 #include <limits.h>
 #include <string.h>
 
+int loop = 1;
+
 void red(){
 	printf("\033[1;31m");
 }
@@ -57,6 +59,23 @@ void username_hostname(){
 
 	printf("$ ");
 }
+
+void mkdir(){
+
+}
+
+void ls(){
+
+}
+
+void uptime(){
+
+}
+
+void sl(){
+
+}
+
 void router(char input[1024]){
 	char function[10];
 	char flags[10];
@@ -74,7 +93,7 @@ void router(char input[1024]){
 			break;
 		}
 	}
-	
+
 	for(int i = fun_counter; i < strlen(input); i++){
 		if(input[i] == '-'){
 			flags[flag_counter] = input[i + 1];
@@ -82,26 +101,36 @@ void router(char input[1024]){
 		}
 	}
 	
-	switch (function){
-		case "mkdir":
-			mkdir();
-			break;
+	function[strcspn(function, "\n")] = 0;
 
-		case "ls":
-			ls();
-			break;
+	if(strcmp(function, "mkdir") ==  0){
+		mkdir();
+	}
 
-		case "uptime":
-			uptime();
-			break;
+	else if(strcmp(function, "ls") == 0){
+		ls();
+	}
 
-		case "sl":
-			sl();
-			break;
+	else if(strcmp(function, "uptime") == 0){
+		uptime(1);
+	}
 
-		default:
-			printf("%s: command not found\n", function);
-			break;
+	else if(strcmp(function, "sl") == 0){
+		sl();
+	}
+
+	else if(strcmp(function, "clear") == 0){
+		system("clear");
+	}
+
+	else if(strcmp(function, "exit") == 0){
+		loop = 0;
+	}
+	
+	else{
+		printf("%s: command not found\n", function);
+	}
+
 }
 int main(void){
 	printf("%c]0;%s%c", '\033', "Medo", '\007');
@@ -109,12 +138,12 @@ int main(void){
 	system("clear");
 
 	char input[1024];
-	int loop = 1;
+
 	while(loop){
 
 	username_hostname();
 	fgets(input, 1024, stdin);
-	
+
 	router(input);
 	}
 	return 0;
