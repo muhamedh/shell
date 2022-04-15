@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
+#include <string.h>
 
 void red(){
 	printf("\033[1;31m");
@@ -56,15 +57,65 @@ void username_hostname(){
 
 	printf("$ ");
 }
+void router(char input[1024]){
+	char function[10];
+	char flags[10];
+	int output;
+	char file_name[128];
+	int fun_counter = 0;
+	int flag_counter = 0;
 
+	for(int i = 0; i < strlen(input); i++){
+		if(input[i] != ' '){
+			function[fun_counter] = input[i];
+			fun_counter++;
+		}
+		else{
+			break;
+		}
+	}
+	
+	for(int i = fun_counter; i < strlen(input); i++){
+		if(input[i] == '-'){
+			flags[flag_counter] = input[i + 1];
+			flag_counter++;
+		}
+	}
+	
+	switch (function){
+		case "mkdir":
+			mkdir();
+			break;
+
+		case "ls":
+			ls();
+			break;
+
+		case "uptime":
+			uptime();
+			break;
+
+		case "sl":
+			sl();
+			break;
+
+		default:
+			printf("%s: command not found\n", function);
+			break;
+}
 int main(void){
-	char input[1024];
+	printf("%c]0;%s%c", '\033', "Medo", '\007');
+	
+	system("clear");
 
-	while(1){
+	char input[1024];
+	int loop = 1;
+	while(loop){
 
 	username_hostname();
 	fgets(input, 1024, stdin);
-
+	
+	router(input);
 	}
 	return 0;
 }
