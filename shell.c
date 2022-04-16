@@ -110,7 +110,7 @@ void sl(){
 
 }
 
-void fork_c(int init_pid){
+void fork_c(){
 
 	int rc = fork();
 	
@@ -120,13 +120,18 @@ void fork_c(int init_pid){
 		printf("I am a parent and my child has woken up\n");
 	}
 	if(rc == 0){
-		printf("I am a child and I am going to sleep for 3 seconds\n");
-		sleep(1);
-		printf("1...\n");
-		sleep(1);
-		printf("2...\n");
-		sleep(1);
-		printf("3...\n");
+		/*
+		* The first argument is the location
+		* The second argument is the actual arguments which go to the main function of sleep.c
+		*/
+		/*
+		 * Usually the exec family of functions, overwrites the currently executing program, and does not return
+		 * to the caller program. But because we are executing the execl function on top of a child process
+		 * the child gets overwriten and we return to our parent (init) process and continue the execution of our shell
+		 */
+
+		execl("./sleep", "./sleep", NULL );
+
 		kill(getpid(), SIGINT); 
 		/*
 		* We have to make the child process kill itself, because if we don't, the child process will never end
@@ -136,6 +141,10 @@ void fork_c(int init_pid){
 		* effectively having two processes, where one does not do anything and eats up memory.
 		*/
 	}
+}
+
+void exec_c(){
+
 }
 
 /**
@@ -210,7 +219,11 @@ void router(char input[1024]){
 	} 
 	
 	else if(strcmp(function,"fork") == 0){
-		fork_c(getpid());
+		fork_c();
+	}
+
+	else if(strcmp(function,"exec") == 0){
+		exec_c();
 	}
 	else if((int)function[0] != 0){ // tests if the first entered char is not a new line 
 		printf("%s: command not found\n", function);
