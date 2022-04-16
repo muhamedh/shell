@@ -143,8 +143,32 @@ void fork_c(){
 	}
 }
 
-void exec_c(){
+void vfork_c(){
 
+	int shared_variable = 100;
+	
+	/***
+	 * In vfork the child process halts the parent process until the child is done executing
+	 * In vfork the child process has the same memory scope as the parent process
+	 * The changes done in the child process will reflect the parent's memory
+	 * Here we have declared the variable shared_variable = 100
+	 * The child process increments it by one, then the child process is killed same reason as for fork_c()
+	 * The changes are reflected in the parent process memory space.
+	 */
+	int pid_id = vfork();
+
+	if(pid_id == 0){
+
+		printf("I am a child and I share parent's variables\n");
+		printf("Our variable before modifying in child process : %d\n", shared_variable);
+		shared_variable++;
+		printf("Our variable after modifying in child process : %d\n", shared_variable);
+
+		kill(getpid(), SIGINT);
+
+	}else{
+		printf("I am a parent and the variable is now : %d\n", shared_variable);
+	}
 }
 
 /**
@@ -222,8 +246,8 @@ void router(char input[1024]){
 		fork_c();
 	}
 
-	else if(strcmp(function,"exec") == 0){
-		exec_c();
+	else if(strcmp(function,"vfork") == 0){
+		vfork_c();
 	}
 	else if((int)function[0] != 0){ // tests if the first entered char is not a new line 
 		printf("%s: command not found\n", function);
