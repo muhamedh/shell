@@ -372,7 +372,7 @@ void router(char input[1024]){
 	}
 
 	else if(strcmp(function, "sl") == 0){
-		for (int i = 0; i < 100; i++){
+		for (int i = 0; i < 110; i++){
 		system("sleep 0.01");
 		system("clear");
 		sl(i);
