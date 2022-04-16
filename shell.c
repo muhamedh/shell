@@ -5,6 +5,8 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <signal.h>
+#include<sys/wait.h>
 
 int loop = 1;
 
@@ -107,6 +109,11 @@ void uptime(){
 void sl(){
 
 }
+
+void fork_c(){
+ // to do
+}
+
 /**
  * Function used for routing user input
 */
@@ -176,6 +183,10 @@ void router(char input[1024]){
 
 	else if(strcmp(function, "exit") == 0){
 		loop = 0;
+	} 
+	
+	else if(strcmp(function,"fork") == 0){
+		fork_c(getpid());
 	}
 	else if((int)function[0] != 0){ // tests if the first entered char is not a new line 
 		printf("%s: command not found\n", function);
