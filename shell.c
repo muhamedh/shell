@@ -10,7 +10,7 @@
 #include <sys/sysinfo.h>
 #include <libgen.h>
 #include <signal.h>
-#include<sys/wait.h>
+#include <sys/wait.h>
 
 int loop = 1;
 
@@ -98,8 +98,8 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 			printf("mkdir: created directory '%s\n", name);
 		}
 		if(flags[i] == 'h'){
-			printf("Usage mkdir [OPTION] ... DIRECTORY...\n");
 			printf("Create the DIRECTORY, if they do not already exist\n");
+			printf("Usage mkdir [OPTION] ... DIRECTORY...\n");
 			printf("-v print a message for a created directory\n");
 			printf("-V print the current version\n");
 			printf("-h show the help page\n");
@@ -108,31 +108,6 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 			printf("current version mkdir : v0.0.1\n");
 		}
 	}
-	
-}
-
-		mkdir(strcat(dir,slash), 0777); // make the dir with mkdir function
-		//0777 -> -rwxrwxrwx read,write & execute for owner, group and others
-
-	}
-
-
-	for( int i = 0;i < f_size;i++){
-		if(flags[i] == 'v'){
-			name[strlen(name)-1] = '\'';
-			printf("mkdir: created directory '%s\n", name);
-		}
-		if(flags[i] == 'h'){
-			printf("Usage mkdir [OPTION] ... DIRECTORY...\n");
-			printf("Create the DIRECTORY, if they do not already exist\n");
-			printf("-v print a message for a created directory\n");
-			printf("-V print the current version\n");
-			printf("-h show the help page\n");
-		}
-		if(flags[i] == 'V'){
-			printf("current version mkdir : v0.0.1\n");
-		}
-	}	
 }
 
 void ls(char flags[10], int f_size){
@@ -432,6 +407,7 @@ void router(char input[1024]){
 
 }
 int main(void){
+
 	printf("%c]0;%s%c", '\033', "Medo", '\007');
 	/*
 	* The system("clear") is included in stdlib.h and works only in Linux based systems
@@ -454,6 +430,7 @@ int main(void){
 
 	router(input);
 	}
+
 	return 0;
 }
 
