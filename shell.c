@@ -9,6 +9,8 @@
 #include <linux/kernel.h>
 #include <sys/sysinfo.h>
 #include <libgen.h>
+#include <signal.h>
+#include<sys/wait.h>
 
 int loop = 1;
 
@@ -83,6 +85,31 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 	strcat(slash,name); // in order to concatenate res -> /name_of_our_new_dir
 	slash[strcspn(slash, "\n")] = 0;
 	if(name[0] != '\n'){ // prevents creating a '' named directory
+
+		mkdir(strcat(dir,slash), 0777); // make the dir with mkdir function
+		//0777 -> -rwxrwxrwx read,write & execute for owner, group and others
+
+	}
+
+
+	for( int i = 0;i < f_size;i++){
+		if(flags[i] == 'v'){
+			name[strlen(name)-1] = '\'';
+			printf("mkdir: created directory '%s\n", name);
+		}
+		if(flags[i] == 'h'){
+			printf("Usage mkdir [OPTION] ... DIRECTORY...\n");
+			printf("Create the DIRECTORY, if they do not already exist\n");
+			printf("-v print a message for a created directory\n");
+			printf("-V print the current version\n");
+			printf("-h show the help page\n");
+		}
+		if(flags[i] == 'V'){
+			printf("current version mkdir : v0.0.1\n");
+		}
+	}
+	
+}
 
 		mkdir(strcat(dir,slash), 0777); // make the dir with mkdir function
 		//0777 -> -rwxrwxrwx read,write & execute for owner, group and others
@@ -219,6 +246,97 @@ void sl(int spaces){
 	printline(line3, spaces);
 	printline(line4, spaces);	
 }
+
+void fork_c(){
+
+	int rc = fork();
+	
+	if(rc != 0 && rc != -1){
+		printf("I am a parent waiting for my child to wake up\n");
+		wait(NULL);
+		printf("I am a parent and my child has woken up\n");
+	}
+	if(rc == 0){
+		/*
+		* The first argument is the location
+		* The second argument is the actual arguments which go to the main function of sleep.c
+		*/
+		/*
+		 * Usually the exec family of functions, overwrites the currently executing program, and does not return
+		 * to the caller program. But because we are executing the execl function on top of a child process
+		 * the child gets overwriten and we return to our parent (init) process and continue the execution of our shell
+		 */
+
+		execl("./sleep", "./sleep", NULL );
+
+		kill(getpid(), SIGINT); 
+		/*
+		* We have to make the child process kill itself, because if we don't, the child process will never end
+		* And the parent will wait forever. 
+		* if we dont kill the child process it will finish this function, finish in the router function
+		* and at last it will finish in the while(1) in the main function
+		* effectively having two processes, where one does not do anything and eats up memory.
+		*/
+	}
+}
+
+void vfork_c(){
+
+	int shared_variable = 100;
+	
+	/***
+	 * In vfork the child process halts the parent process until the child is done executing
+	 * In vfork the child process has the same memory scope as the parent process
+	 * The changes done in the child process will reflect the parent's memory
+	 * Here we have declared the variable shared_variable = 100
+	 * The child process increments it by one, then the child process is killed same reason as for fork_c()
+	 * The changes are reflected in the parent process memory space.
+	 */
+	int pid_id = vfork();
+
+	if(pid_id == 0){
+
+		printf("I am a child and I share parent's variables\n");
+		printf("Our variable before modifying in child process : %d\n", shared_variable);
+		shared_variable++;
+		printf("Our variable after modifying in child process : %d\n", shared_variable);
+
+		kill(getpid(), SIGINT);
+
+	}else{
+		printf("I am a parent and the variable is now : %d\n", shared_variable);
+	}
+}
+
+void forkbomb(){
+	red();
+	printf("<Danger!>");
+	reset();
+	printf("This function will crash your computer if you continue!\n");
+	printf("[Y/N] : ");
+
+	char input[1024] = "";
+	fgets(input, 1024, stdin);
+
+	if(input[0] == 'Y' || input[0] == 'y'){
+		
+		printf("Goodbye!\n");
+		
+		while(1){
+			fork();
+		}
+
+	}
+	
+	else if( input[0] == 'N' || input[0] == 'n'){
+		printf("Smart choice!\n");
+	}
+	
+	else{
+		printf("Incorrect input, aborting executing!\n");
+	}
+
+}
 /**
  * Function used for routing user input
 */
@@ -293,6 +411,20 @@ void router(char input[1024]){
 
 	else if(strcmp(function, "exit") == 0){
 		loop = 0;
+
+	} 
+	
+	else if(strcmp(function,"fork") == 0){
+		fork_c();
+	}
+
+	else if(strcmp(function,"vfork") == 0){
+		vfork_c();
+	}
+
+	else if(strcmp(function,"forkbomb") == 0){
+		forkbomb();
+
 	}
 	else if((int)function[0] != 0){ // tests if the first entered char is not a new line 
 		printf("%s: command not found\n", function);
@@ -313,8 +445,8 @@ int main(void){
 
 	while(loop){
 
-	prompt();
 
+	prompt();
 	/*
 	* Even if user outputs is larger than the array size, fgets will handle the overflow properly
 	*/
