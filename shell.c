@@ -110,8 +110,32 @@ void sl(){
 
 }
 
-void fork_c(){
- // to do
+void fork_c(int init_pid){
+
+	int rc = fork();
+	
+	if(rc != 0 && rc != -1){
+		printf("I am a parent waiting for my child to wake up\n");
+		wait(NULL);
+		printf("I am a parent and my child has woken up\n");
+	}
+	if(rc == 0){
+		printf("I am a child and I am going to sleep for 3 seconds\n");
+		sleep(1);
+		printf("1...\n");
+		sleep(1);
+		printf("2...\n");
+		sleep(1);
+		printf("3...\n");
+		kill(getpid(), SIGINT); 
+		/*
+		* We have to make the child process kill itself, because if we don't, the child process will never end
+		* And the parent will wait forever. 
+		* if we dont kill the child process it will finish this function, finish in the router function
+		* and at last it will finish in the while(1) in the main function
+		* effectively having two processes, where one does not do anything and eats up memory.
+		*/
+	}
 }
 
 /**
