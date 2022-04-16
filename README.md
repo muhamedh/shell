@@ -1,30 +1,30 @@
-## Shell
-#### Shell mockup written in C for an Operating System course
+# Shell
+Shell mockup written in C for an Operating System course
 
-#### Group members:
-###### Edin Bajrić
-###### Muhamed Hamzić
+Group members:
+Edin Bajrić
+Muhamed Hamzić
 
-#### Shell cabalities
-###### The shell is capable of running the following commands:
+Shell cabalities
+The shell is capable of running the following commands:
 
-###### clear - clears the shell screen
-###### exit - exits the shell screen
-###### mkdir - creates a new directory - flags : -v (verbose) -V (version) -h (help)
-###### ls
-###### uptime
-###### sl
+clear - clears the shell screen
+exit - exits the shell screen
+mkdir - creates a new directory - flags : -v (verbose) -V (version) -h (help)
+ls
+uptime
+sl
 
-###### fork examples
+fork examples
 
-#### Running instructions
+Running instructions
 
-#### Files-directories
+Files-directories
 
-#### Answers 
+Answers 
 
 
-#### Challenges
-#### Sources-tutorials
+Challenges
+Sources-tutorials
 
 
