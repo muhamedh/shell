@@ -5,6 +5,10 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <dirent.h>
+#include <linux/kernel.h>
+#include <sys/sysinfo.h>
+#include <libgen.h>
 #include <signal.h>
 #include<sys/wait.h>
 
@@ -34,12 +38,14 @@ void reset(){
 	printf("\033[0m");
 }
 
-void username_hostname(){
+void prompt(){
 	char *username;
 	char hostname[HOST_NAME_MAX +1];
 	
 	username = getlogin();
 	gethostname(hostname, HOST_NAME_MAX + 1);
+
+	char cwd[PATH_MAX];
 	
 	red();
 	printf("[");
@@ -52,9 +58,16 @@ void username_hostname(){
 
 	purple();
 	printf("%s", hostname);
+	
 
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
 	cyan();
-	printf(" ~");
+	printf(" %s", basename(cwd));
+	}
+	else{
+		perror("getcwd() error");
+        return;
+	}
 
 	red();
 	printf("]");
@@ -98,16 +111,140 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 	
 }
 
-void ls(){
+		mkdir(strcat(dir,slash), 0777); // make the dir with mkdir function
+		//0777 -> -rwxrwxrwx read,write & execute for owner, group and others
 
+	}
+
+
+	for( int i = 0;i < f_size;i++){
+		if(flags[i] == 'v'){
+			name[strlen(name)-1] = '\'';
+			printf("mkdir: created directory '%s\n", name);
+		}
+		if(flags[i] == 'h'){
+			printf("Usage mkdir [OPTION] ... DIRECTORY...\n");
+			printf("Create the DIRECTORY, if they do not already exist\n");
+			printf("-v print a message for a created directory\n");
+			printf("-V print the current version\n");
+			printf("-h show the help page\n");
+		}
+		if(flags[i] == 'V'){
+			printf("current version mkdir : v0.0.1\n");
+		}
+	}	
 }
 
-void uptime(){
+void ls(char flags[10], int f_size){
+	DIR* dir = opendir(".");
 
+	if(dir == NULL){
+		return;
+	}
+	
+	struct dirent* entity;
+	entity = readdir(dir);
+	
+	while(entity != NULL){
+		if(f_size == 0){
+		printf("%s\n", entity->d_name);
+		entity = readdir(dir);
+		}
+
+		for(int i = 0; i < f_size; i++){
+			if(flags[i] == 'c'){
+				if(entity->d_type == DT_DIR){
+					purple();
+					printf("%s\n", entity->d_name);
+					reset();
+				}
+
+				else if(entity->d_type == DT_REG){
+					green();
+					printf("%s\n", entity->d_name);
+					reset();	
+				}
+			}
+		entity = readdir(dir);
+		}
+	}
+	closedir(dir);
+
+	for(int i = 0; i < f_size; i++){
+		if(flags[i] == 'h'){
+			printf("List FILEs in current directory\n");
+			printf("Usage ls [OPTION]...\n");
+			printf("-c add color to the output (directories - purple, files - green\n");
+			printf("-v print the current version\n");
+			printf("-h show the help page\n");
+		}
+		if(flags[i] == 'V'){
+			printf("current version ls : v0.0.1\n");
+		}
+	}
 }
 
-void sl(){
+void uptime(char flags[10], int f_size){
+	struct sysinfo s_info;
+    int error = sysinfo(&s_info);
+    if(error != 0)
 
+    {
+        printf("code error = %d\n", error);
+    }
+    int secs = s_info.uptime;
+    int hours = (int)(secs/3600);
+    int minutes = ((int)secs/60) % 60;
+	int seconds = (int)(secs%60);
+		
+	if(f_size == 0){
+	printf("uptime: %d:%d:%d\n", hours, minutes, seconds);
+	}
+
+	for(int i = 0; i < f_size; i++){
+		if(flags[i] == 'p'){
+			red();
+			printf("uptime: ");
+			yellow();
+			printf("%d", hours);
+			printf(" hours, ");
+			green();
+			printf("%d", minutes);
+			printf(" minutes, ");
+			purple();
+			printf("%d", seconds);
+			printf(" seconds\n");
+		}
+
+		if(flags[i] == 'V'){
+			printf("current version uptime : v0.0.1\n");
+		}
+		if(flags[i] == 'h'){
+			printf("Tell how long the system has been runing\n");
+			printf("Usage uptime [OPTION]...\n");
+			printf("-p show uptime in pretty format\n");
+			printf("-V print the current version\n");
+			printf("-h show the help page\n");
+		}
+	}
+}
+
+void printline(char *line, int number){
+        for(int i = 0; i < number; i++){
+                printf(" ");
+        }
+        printf("%s\n", line);
+}
+
+void sl(int spaces){
+	char *line1 = "       .--------.";
+	char *line2 = " ____/_____|___ \\___";
+	char *line3 = " O    _   - |   _   ,*";
+	char *line4 = " '--(_)-------(_)--'";
+	printline(line1, spaces);
+	printline(line2, spaces);
+	printline(line3, spaces);
+	printline(line4, spaces);	
 }
 
 void fork_c(){
@@ -198,6 +335,7 @@ void forkbomb(){
 	else{
 		printf("Incorrect input, aborting executing!\n");
 	}
+
 }
 /**
  * Function used for routing user input
@@ -251,15 +389,20 @@ void router(char input[1024]){
 	}
 
 	else if(strcmp(function, "ls") == 0){
-		ls();
+		ls(flags, flag_counter);
 	}
 
 	else if(strcmp(function, "uptime") == 0){
-		uptime(1);
+		uptime(flags, flag_counter);
 	}
 
 	else if(strcmp(function, "sl") == 0){
-		sl();
+		for (int i = 0; i < 100; i++){
+		system("sleep 0.01");
+		system("clear");
+		sl(i);
+		}
+		system("clear");
 	}
 
 	else if(strcmp(function, "clear") == 0){
@@ -268,6 +411,7 @@ void router(char input[1024]){
 
 	else if(strcmp(function, "exit") == 0){
 		loop = 0;
+
 	} 
 	
 	else if(strcmp(function,"fork") == 0){
@@ -280,6 +424,7 @@ void router(char input[1024]){
 
 	else if(strcmp(function,"forkbomb") == 0){
 		forkbomb();
+
 	}
 	else if((int)function[0] != 0){ // tests if the first entered char is not a new line 
 		printf("%s: command not found\n", function);
@@ -300,8 +445,8 @@ int main(void){
 
 	while(loop){
 
-	username_hostname();
 
+	prompt();
 	/*
 	* Even if user outputs is larger than the array size, fgets will handle the overflow properly
 	*/
