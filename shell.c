@@ -171,6 +171,34 @@ void vfork_c(){
 	}
 }
 
+void forkbomb(){
+	red();
+	printf("<Danger!>");
+	reset();
+	printf("This function will crash your computer if you continue!\n");
+	printf("[Y/N] : ");
+
+	char input[1024] = "";
+	fgets(input, 1024, stdin);
+
+	if(input[0] == 'Y' || input[0] == 'y'){
+		
+		printf("Goodbye!\n");
+		
+		while(1){
+			fork();
+		}
+
+	}
+	
+	else if( input[0] == 'N' || input[0] == 'n'){
+		printf("Smart choice!\n");
+	}
+	
+	else{
+		printf("Incorrect input, aborting executing!\n");
+	}
+}
 /**
  * Function used for routing user input
 */
@@ -248,6 +276,10 @@ void router(char input[1024]){
 
 	else if(strcmp(function,"vfork") == 0){
 		vfork_c();
+	}
+
+	else if(strcmp(function,"forkbomb") == 0){
+		forkbomb();
 	}
 	else if((int)function[0] != 0){ // tests if the first entered char is not a new line 
 		printf("%s: command not found\n", function);
