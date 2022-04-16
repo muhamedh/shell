@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <dirent.h>
 
 int loop = 1;
 
@@ -92,12 +93,56 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 		if(flags[i] == 'V'){
 			printf("current version mkdir : v0.0.1\n");
 		}
-	}
-	
+	}	
 }
 
-void ls(){
+void ls(char flags[10], int f_size){
+	DIR* dir = opendir(".");
 
+	if(dir == NULL){
+		return;
+	}
+	
+	struct dirent* entity;
+	entity = readdir(dir);
+	
+	while(entity != NULL){
+		if(f_size == 0){
+		printf("%s\n", entity->d_name);
+		entity = readdir(dir);
+		}
+
+		for(int i = 0; i < f_size; i++){
+			if(flags[i] == 'c'){
+				if(entity->d_type == DT_DIR){
+					purple();
+					printf("%s\n", entity->d_name);
+					reset();
+				}
+
+				else if(entity->d_type == DT_REG){
+					green();
+					printf("%s\n", entity->d_name);
+					reset();	
+				}
+			}
+		entity = readdir(dir);
+		}
+	}
+	closedir(dir);
+
+	for(int i = 0; i < f_size; i++){
+		if(flags[i] == 'h'){
+			printf("Usage ls [OPTION]... [FILE]...\n");
+			printf("List FILEs in current directory\n");
+			printf("-c add color to the output (directories - purple, files - green\n");
+			printf("-v print the current version\n");
+			printf("-h show the help page\n");
+		}
+		if(flags[i] == 'v'){
+			printf("current version ls : v0.0.1\n");
+		}
+	}
 }
 
 void uptime(){
@@ -159,7 +204,7 @@ void router(char input[1024]){
 	}
 
 	else if(strcmp(function, "ls") == 0){
-		ls();
+		ls(flags, flag_counter);
 	}
 
 	else if(strcmp(function, "uptime") == 0){
