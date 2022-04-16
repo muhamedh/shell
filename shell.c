@@ -6,6 +6,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <linux/kernel.h>
+#include <sys/sysinfo.h>
+#include <libgen.h>
 
 int loop = 1;
 
@@ -33,12 +36,14 @@ void reset(){
 	printf("\033[0m");
 }
 
-void username_hostname(){
+void prompt(){
 	char *username;
 	char hostname[HOST_NAME_MAX +1];
 	
 	username = getlogin();
 	gethostname(hostname, HOST_NAME_MAX + 1);
+
+	char cwd[PATH_MAX];
 	
 	red();
 	printf("[");
@@ -51,9 +56,16 @@ void username_hostname(){
 
 	purple();
 	printf("%s", hostname);
+	
 
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
 	cyan();
-	printf(" ~");
+	printf(" %s", basename(cwd));
+	}
+	else{
+		perror("getcwd() error");
+        return;
+	}
 
 	red();
 	printf("]");
@@ -133,24 +145,79 @@ void ls(char flags[10], int f_size){
 
 	for(int i = 0; i < f_size; i++){
 		if(flags[i] == 'h'){
-			printf("Usage ls [OPTION]... [FILE]...\n");
 			printf("List FILEs in current directory\n");
+			printf("Usage ls [OPTION]...\n");
 			printf("-c add color to the output (directories - purple, files - green\n");
 			printf("-v print the current version\n");
 			printf("-h show the help page\n");
 		}
-		if(flags[i] == 'v'){
+		if(flags[i] == 'V'){
 			printf("current version ls : v0.0.1\n");
 		}
 	}
 }
 
-void uptime(){
+void uptime(char flags[10], int f_size){
+	struct sysinfo s_info;
+    int error = sysinfo(&s_info);
+    if(error != 0)
 
+    {
+        printf("code error = %d\n", error);
+    }
+    int secs = s_info.uptime;
+    int hours = (int)(secs/3600);
+    int minutes = ((int)secs/60) % 60;
+	int seconds = (int)(secs%60);
+		
+	if(f_size == 0){
+	printf("uptime: %d:%d:%d\n", hours, minutes, seconds);
+	}
+
+	for(int i = 0; i < f_size; i++){
+		if(flags[i] == 'p'){
+			red();
+			printf("uptime: ");
+			yellow();
+			printf("%d", hours);
+			printf(" hours, ");
+			green();
+			printf("%d", minutes);
+			printf(" minutes, ");
+			purple();
+			printf("%d", seconds);
+			printf(" seconds\n");
+		}
+
+		if(flags[i] == 'V'){
+			printf("current version uptime : v0.0.1\n");
+		}
+		if(flags[i] == 'h'){
+			printf("Tell how long the system has been runing\n");
+			printf("Usage uptime [OPTION]...\n");
+			printf("-p show uptime in pretty format\n");
+			printf("-V print the current version\n");
+			printf("-h show the help page\n");
+		}
+	}
 }
 
-void sl(){
+void printline(char *line, int number){
+        for(int i = 0; i < number; i++){
+                printf(" ");
+        }
+        printf("%s\n", line);
+}
 
+void sl(int spaces){
+	char *line1 = "       .--------.";
+	char *line2 = " ____/_____|___ \\___";
+	char *line3 = " O    _   - |   _   ,*";
+	char *line4 = " '--(_)-------(_)--'";
+	printline(line1, spaces);
+	printline(line2, spaces);
+	printline(line3, spaces);
+	printline(line4, spaces);	
 }
 /**
  * Function used for routing user input
@@ -208,11 +275,16 @@ void router(char input[1024]){
 	}
 
 	else if(strcmp(function, "uptime") == 0){
-		uptime(1);
+		uptime(flags, flag_counter);
 	}
 
 	else if(strcmp(function, "sl") == 0){
-		sl();
+		for (int i = 0; i < 100; i++){
+		system("sleep 0.01");
+		system("clear");
+		sl(i);
+		}
+		system("clear");
 	}
 
 	else if(strcmp(function, "clear") == 0){
@@ -241,7 +313,7 @@ int main(void){
 
 	while(loop){
 
-	username_hostname();
+	prompt();
 
 	/*
 	* Even if user outputs is larger than the array size, fgets will handle the overflow properly
