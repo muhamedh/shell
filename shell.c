@@ -150,7 +150,7 @@ void ls(char flags[10], int f_size){
 			printf("List FILEs in current directory\n");
 			printf("Usage ls [OPTION]...\n");
 			printf("-c add color to the output (directories - purple, files - green\n");
-			printf("-v print the current version\n");
+			printf("-V print the current version\n");
 			printf("-h show the help page\n");
 		}
 		if(flags[i] == 'V'){
