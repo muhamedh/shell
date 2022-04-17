@@ -213,7 +213,7 @@ void uptime(char flags[10], int f_size, char file_name[128], int output){
 			printf("current version uptime : v0.0.1\n");
 		}
 		if(flags[i] == 'h'){
-			printf("Tell how long the system has been runing\n");
+			printf("Tell how long the system has been running\n");
 			printf("Usage uptime [OPTION]...\n");
 			printf("-p show uptime in pretty format\n");
 			printf("-V print the current version\n");
