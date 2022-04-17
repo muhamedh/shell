@@ -1,11 +1,20 @@
 # Shell
-Shell mockup written in C for an Operating System course
+Shell mockup written in C for the Operating Systems course
 
-Group members:
+## Group members:
 Edin Bajrić
 Muhamed Hamzić
 
-Shell cabalities
+The submission contains the following files:
+shell.c
+sleep.c
+
+Answers:
+
+Description:
+
+
+Shell capabilities
 The shell is capable of running the following commands:
 
 clear - clears the shell screen
