@@ -62,6 +62,12 @@ OPTIONS:
 
 -h show the help page
 
+Redirect the output to a text file in the following way:
+
+`uptime > your_file_name.txt`
+
+*.txt must be the extension of your file*
+
 `sl`
  
 Prints a car moving across your screen
