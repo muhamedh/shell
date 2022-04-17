@@ -66,6 +66,17 @@ OPTIONS:
  
 Prints a car moving across your screen
 
+`fork`
+
+Shows an example of working with parent and child processes. The parent process creates a child process which uses the execl function to run the sleep.c program. Finally the child process terminates itself.
+
+`vfork`
+
+Demonstrates the major difference between fork and vfork : in vfork the memory is shared between the parent and the child process.
+
+`forkbomb`
+
+Runs a DoS attack by creating an "infinite" amount of child processes.
 
 
 ## Instructions for compiling
