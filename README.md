@@ -63,7 +63,8 @@ OPTIONS:
 -h show the help page
 
 `sl`
-
+ 
+Prints a car moving across your screen
 
 
 
