@@ -93,23 +93,14 @@ Runs a DoS attack by creating an "infinite" amount of child processes.
 
 `./shell`
 
-Shell capabilities
-The shell is capable of running the following commands:
 
-clear - clears the shell screen
+## Challenges
 
-sl
+Researching additional materials needed for coding
 
-fork examples
+Researching built-in C functions we haven't used
 
-Running instructions
-
-Files-directories
-
-Answers 
-
-
-Challenges
+Working on github, tracking changes and resolving merge conflicts
 
 ## Sources-tutorials
 
