@@ -159,21 +159,39 @@ void ls(char flags[10], int f_size){
 	}
 }
 
-void uptime(char flags[10], int f_size){
+void uptime(char flags[10], int f_size, char file_name[128], int output){
 	struct sysinfo s_info;
     int error = sysinfo(&s_info);
-    if(error != 0)
-
+	
+	if(error != 0)
     {
         printf("code error = %d\n", error);
     }
+
     int secs = s_info.uptime;
     int hours = (int)(secs/3600);
     int minutes = ((int)secs/60) % 60;
 	int seconds = (int)(secs%60);
 		
 	if(f_size == 0){
-	printf("uptime: %d:%d:%d\n", hours, minutes, seconds);
+		if(output == 0){
+			printf("uptime: %d:%d:%d\n", hours, minutes, seconds);
+		}
+		
+		if(output == 1){
+			FILE * file;
+			file_name[strcspn(file_name, "\n")] = 0;
+			file = fopen(file_name,"w");
+
+			if(file == NULL){
+				return;
+			}
+			fprintf(file,"uptime: %d:%d:%d\n", hours, minutes, seconds);
+			fclose(file);
+
+			printf("Uptime written to a file : %s\n", file_name);
+		}
+
 	}
 
 	for(int i = 0; i < f_size; i++){
@@ -352,10 +370,6 @@ void router(char input[1024]){
 		}
 	}
 
-	if(output == 1){
-		// handle redirecting to file
-		// todo
-	}
 
 	function[strcspn(function, "\n")] = 0;
 
@@ -368,7 +382,7 @@ void router(char input[1024]){
 	}
 
 	else if(strcmp(function, "uptime") == 0){
-		uptime(flags, flag_counter);
+		uptime(flags, flag_counter, file_name, output);
 	}
 
 	else if(strcmp(function, "sl") == 0){
