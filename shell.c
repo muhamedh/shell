@@ -44,13 +44,17 @@ void reset(){
 
 void prompt(){
 	char *username;
-	char hostname[HOST_NAME_MAX +1];
+	char hostname[HOST_NAME_MAX + 1]; // host names are limited to (HOST_NAME_MAX) bytes
 	
-	username = getlogin();
-	gethostname(hostname, HOST_NAME_MAX + 1);
+	username = getlogin(); // included in unistd.h, it returns the login name of the user
+	gethostname(hostname, HOST_NAME_MAX + 1); // returns the standard host name for the current machine
 
-	char cwd[PATH_MAX];
-	
+	char cwd[PATH_MAX]; // PATH_MAX - defines the longest path a directory can be
+
+	/*
+	*	settings for the color and the overall look of the prompt
+	*/
+
 	red();
 	printf("[");
 
@@ -62,11 +66,10 @@ void prompt(){
 
 	purple();
 	printf("%s", hostname);
-	
 
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+    if (getcwd(cwd, sizeof(cwd)) != NULL) { // getcwd() returns an absolute pathname of the current working directory
 	cyan();
-	printf(" %s", basename(cwd));
+	printf(" %s", basename(cwd)); // basename() returns the final component of the pathname, deleting any trailing '/' characters
 	}
 	else{
 		perror("getcwd() error");
