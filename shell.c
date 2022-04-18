@@ -14,6 +14,10 @@
 
 int loop = 1;
 
+/*
+*	\033 is an escape sequence followed by the color code which changes the color of the text
+*/
+
 void red(){
 	printf("\033[1;31m");
 }
@@ -35,7 +39,7 @@ void cyan(){
 }
 
 void reset(){
-	printf("\033[0m");
+	printf("\033[0m"); // color code "[0m" resets the text color to the default color
 }
 
 void prompt(){
