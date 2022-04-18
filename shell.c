@@ -95,7 +95,10 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 
 	}
 
-
+	/**
+	 * The user can choose to input many flags, so we go throught the flags array
+	 * detecting the user flags and executing them.
+	 */
 	for( int i = 0;i < f_size;i++){
 		if(flags[i] == 'v'){
 			name[strlen(name)-1] = '\'';
@@ -306,6 +309,10 @@ void vfork_c(){
 }
 
 void forkbomb(){
+	/**
+	 * Since the forkbomb command is very dangerous a simple CLI is created in order
+	 * to protect the user from accidently crashing its computer.
+	 */
 	red();
 	printf("<Danger!>");
 	reset();
@@ -318,7 +325,14 @@ void forkbomb(){
 	if(input[0] == 'Y' || input[0] == 'y'){
 		
 		printf("Goodbye!\n");
-		
+		/**
+		 * The forkbomb command is simple in nature, all we need is a infinite loop and the fork command
+		 * We create an "infinite" number of processes, in a certain amount of time the computer will be overloaded
+		 * with new child processes, it will start to freeze and in the end -> shutdown
+		 * 
+		 * Also notice that the forking is grows fast 1 child creates 2 processes, these 2 create 4..
+		 * 
+		 */
 		while(1){
 			fork();
 		}
@@ -335,7 +349,8 @@ void forkbomb(){
 
 }
 /**
- * Function used for routing user input
+ * Function used for routing user input, it can be though as the "heart" of the shell, since it
+ * reads the user input, intreprets it and calls the wanted function.
 */
 void router(char input[1024]){
 
@@ -346,7 +361,7 @@ void router(char input[1024]){
 	int fun_counter = 0;
 	int flag_counter = 0;
 	int name_counter = 0;
-
+	// first we need to detect the command, we know we reached the end of the command when we stumble upon a space or a new line char = enter key
 	for(int i = 0; i < strlen(input); i++){
 		if(input[i] != ' ' || (int)input[i] == 0 ){
 			function[fun_counter] = input[i];
@@ -357,12 +372,23 @@ void router(char input[1024]){
 		}
 	}
 
+	// now we check if the user have provided the shell with flags
+	// we detect '-' and take the next char from the string which is the actual flag
+
 	for(int i = fun_counter; i < strlen(input); i++){
 		if(input[i] == '-'){
 			flags[flag_counter] = input[i + 1];
 			flag_counter++;
 		}
 	}
+	
+	// the last thing we do is detect if the user have specified redirecting to an output
+	// we detect '>' which means the user wants file output, we set the output variable to 1
+	// this will serve as a flag when we check if the user wants file output in uptime
+
+	// notice that we start from fun_counter + 2 * flag_counter + 1
+	// fun_counter (the lenght of command) + 2 * flag_counter(number of flags, times 2 because of '-') 
+	// + 1 since we want to start the input reading from the space
 
 	for(int i = fun_counter + 2*flag_counter + 1; i < strlen(input); i++){
 		if(input[i] == '>'){
@@ -374,9 +400,11 @@ void router(char input[1024]){
 		}
 	}
 
-
+	// removes the '\n' char that fgets adds
 	function[strcspn(function, "\n")] = 0;
 
+	// simple if statements which calls the function to its desired input
+	
 	if(strcmp(function, "mkdir") ==  0){
 		mkdir_c(flags, flag_counter, file_name, name_counter);
 	}
