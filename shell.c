@@ -17,7 +17,6 @@ int loop = 1;
 /*
 *	\033 is an escape sequence followed by the color code which changes the color of the text
 */
-
 void red(){
 	printf("\033[1;31m");
 }
@@ -54,7 +53,6 @@ void prompt(){
 	/*
 	*	settings for the color and the overall look of the prompt
 	*/
-
 	red();
 	printf("[");
 
