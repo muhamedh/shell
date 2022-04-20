@@ -110,3 +110,17 @@ https://www.youtube.com/watch?v=OVFEWSP7n8c
 
 https://stackoverflow.com/questions/38796808/how-to-safely-try-out-a-fork-bomb
 
+https://tuxthink.blogspot.com/2012/12/c-program-in-linux-to-find-username-of.html
+
+https://www.systutorials.com/how-to-get-the-hostname-of-the-node-in-c/
+
+https://www.theurbanpenguin.com/4184-2/
+
+https://www.ibm.com/docs/en/zos/2.4.0?topic=functions-basename-return-last-component-path-name#rbasen
+
+https://iq.opengenus.org/chdir-fchdir-getcwd-in-c/
+
+https://www.youtube.com/watch?v=j9yL30R6npk
+
+https://stackoverflow.com/questions/1540627/what-api-do-i-call-to-get-the-system-uptime
+
