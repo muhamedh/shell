@@ -240,6 +240,7 @@ void printline(char *line, int number){
 }
 
 void sl(int spaces){
+	green();
 	char *line1 = "       .--------.";
 	char *line2 = " ____/_____|___ \\___";
 	char *line3 = " O    _   - |   _   ,*";
@@ -247,7 +248,8 @@ void sl(int spaces){
 	printline(line1, spaces);
 	printline(line2, spaces);
 	printline(line3, spaces);
-	printline(line4, spaces);	
+	printline(line4, spaces);
+	reset();
 }
 
 void fork_c(){
