@@ -1,4 +1,4 @@
-# Shell
+# Mesh (Musa & Edo shell)
 Shell mockup written in C for the Operating Systems course
 
 ## Group members
