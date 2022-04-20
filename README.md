@@ -15,6 +15,21 @@ sleep.c
 
 ## Answers
 
+### Q1: The following actions, do they require the OS to use kernel mode or is user mode sufficient?
+
+- Starting a new process.
+
+The fork() function in the C programming language is the underlying system call to the fork implementation in Linux. This action requires the OS to be in kernel mode, because this function is extremely dangerous - creates a new PCB for the child process.
+
+- Multiplying two floating numbers stored in an application’s memory.
+
+Since the multiplication is done in the application’s memory there is no need for the mode to switch to kernel mode and it is sufficient for the program to stay in user mode in order to multiply two numbers.
+
+- Writing the results of the multiplication to a temporary log file on disk.
+
+Even though the log file is only temporary, the program has to access the hardware to write it. And all access to hardware must go through the kernel, therefore it requires the kernel mode.
+
+
 ## Description
 
 The shell implements all the project tasks except for piping. Additional commands were implemented such as: `clear` which clears the screen and `exit` which exits the shell. The help page for the entire shell will be listed in the following section.
@@ -123,4 +138,12 @@ https://iq.opengenus.org/chdir-fchdir-getcwd-in-c/
 https://www.youtube.com/watch?v=j9yL30R6npk
 
 https://stackoverflow.com/questions/1540627/what-api-do-i-call-to-get-the-system-uptime
+
+https://code.woboq.org/linux/linux/kernel/fork.c.html#fork_idle
+
+https://www.linuxtechi.com/learn-use-fork-vfork-wait-exec-system-calls-linux/
+
+https://www.programiz.com/c-programming/c-file-input-output
+
+
 
