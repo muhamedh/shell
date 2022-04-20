@@ -186,7 +186,7 @@ void uptime(char flags[10], int f_size, char file_name[128], int output){
 	if(output == 0 && f_size == 0){
 			printf("uptime: %d:%d:%d\n", hours, minutes, seconds);
 		}
-		
+
 	if(f_size == 0){
 		if(output == 1){
 			FILE * file;
