@@ -92,7 +92,7 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 	if(name[0] != '\n'){ // prevents creating a '' named directory
 
 		mkdir(strcat(dir,slash), 0777); // make the dir with mkdir function
-		//0777 -> -rwxrwxrwx read,write & execute for owner, group and others
+		// 0777 -> -rwxrwxrwx read,write & execute for owner, group and others
 
 	}
 
