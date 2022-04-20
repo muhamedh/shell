@@ -42,6 +42,7 @@ void reset(){
 }
 
 void prompt(){
+
 	char *username;
 	char hostname[HOST_NAME_MAX + 1]; // host names are limited to (HOST_NAME_MAX) bytes
 	
@@ -80,15 +81,18 @@ void prompt(){
 	reset();
 
 	printf("$ ");
+
 }
 
 void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
+
 	char dir[PATH_MAX]; // PATH_MAX - defines the longest path a direcotry can be
 	getcwd(dir, sizeof(dir)); // getcwd - gives us the absolute pathname of the current working directory
 
 	char slash[129] = "/"; // creates a new string slighty bigger than name
 	strcat(slash,name); // in order to concatenate res -> /name_of_our_new_dir
 	slash[strcspn(slash, "\n")] = 0;
+
 	if(name[0] != '\n'){ // prevents creating a '' named directory
 
 		mkdir(strcat(dir,slash), 0777); // make the dir with mkdir function
@@ -100,6 +104,7 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 	 * The user can choose to input many flags, so we go throught the flags array
 	 * detecting the user flags and executing them.
 	 */
+
 	for( int i = 0;i < f_size;i++){
 		if(flags[i] == 'v'){
 			name[strlen(name)-1] = '\'';
@@ -119,6 +124,7 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 }
 
 void ls(char flags[10], int f_size){
+
 	// opendir() is included in dirent.h and opens a directory stream specified in the brackets
 	// in this case the "." which represents the current directory
 	DIR* dir = opendir(".");
@@ -178,6 +184,7 @@ void ls(char flags[10], int f_size){
 }
 
 void uptime(char flags[10], int f_size, char file_name[128], int output){
+	
 	struct sysinfo s_info; // sysinfo() returns information on overall system statistics
     int error = sysinfo(&s_info);
 
@@ -202,17 +209,22 @@ void uptime(char flags[10], int f_size, char file_name[128], int output){
 	}
 
 	if(f_size == 0){
-		if(output == 1){
+		if(output == 1){ // if we detected a '>' char in input we need to redirect the output
+			// first we create a pointer to FILE type
 			FILE * file;
+			// we need to remove the end line char from the file_name string
 			file_name[strcspn(file_name, "\n")] = 0;
+			// we open/create a new file and set the mode to write - 'w'
 			file = fopen(file_name,"w");
 
-			if(file == NULL){
+			if(file == NULL){ // if the file was not created successfully we exit the function
 				return;
 			}
+			// we output the following string to file
 			fprintf(file,"uptime: %d:%d:%d\n", hours, minutes, seconds);
+			// we close the file
 			fclose(file);
-
+			// provide user with confirmation message
 			printf("Uptime written to a file : %s\n", file_name);
 		}
 
@@ -472,7 +484,6 @@ void router(char input[1024]){
 
 	else if(strcmp(function,"forkbomb") == 0){
 		forkbomb();
-
 	}
 	else if((int)function[0] != 0){ // tests if the first entered char is not a new line 
 		printf("%s: command not found\n", function);
