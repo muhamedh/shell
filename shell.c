@@ -178,20 +178,26 @@ void ls(char flags[10], int f_size){
 }
 
 void uptime(char flags[10], int f_size, char file_name[128], int output){
-	struct sysinfo s_info;
+	struct sysinfo s_info; // sysinfo() returns information on overall system statistics
     int error = sysinfo(&s_info);
-	
+
+	// on success sysinfo() returns 0 
+	// on error, -1 is returned
 	if(error != 0)
     {
         printf("code error = %d\n", error);
     }
 
+	/* s_info.uptime is system uptime in seconds
+	* then some formulas are used to convert seconds into hours, minutes and seconds
+	*/
     int secs = s_info.uptime;
     int hours = (int)(secs/3600);
     int minutes = ((int)secs/60) % 60;
 	int seconds = (int)(secs%60);
 
-	if(output == 0 && f_size == 0){
+	
+	if(output == 0 && f_size == 0){ // if redirecting to file and flags are not used
 		printf("uptime: %d:%d:%d\n", hours, minutes, seconds);
 	}
 
@@ -245,17 +251,22 @@ void uptime(char flags[10], int f_size, char file_name[128], int output){
 
 void printline(char *line, int number){
         for(int i = 0; i < number; i++){
-                printf(" ");
+                printf(" "); // prints an empty space based on the value of number (space)
         }
-        printf("%s\n", line);
+        printf("%s\n", line); // prints a "line" of the car
 }
 
-void sl(int spaces){
+// int spaces determines how far the car moves
+void sl(int spaces){ 
 	green();
+
+	// car is seperated in four lines
 	char *line1 = "       .--------.";
 	char *line2 = " ____/_____|___ \\___";
 	char *line3 = " O    _   - |   _   ,*";
 	char *line4 = " '--(_)-------(_)--'";
+
+	// prints all four segments of the car using printline() 
 	printline(line1, spaces);
 	printline(line2, spaces);
 	printline(line3, spaces);
@@ -434,10 +445,10 @@ void router(char input[1024]){
 	}
 
 	else if(strcmp(function, "sl") == 0){
-		for (int i = 0; i < 110; i++){
-		system("sleep 0.01");
-		system("clear");
-		sl(i);
+		for (int i = 0; i < 110; i++){ 
+		system("sleep 0.01"); // movement speed of the car
+		system("clear"); // clears the screen before each instance of car appears
+		sl(i); // the car moves 110 spaces
 		}
 		system("clear");
 	}
