@@ -119,19 +119,21 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 }
 
 void ls(char flags[10], int f_size){
-	DIR* dir = opendir(".");
+	DIR* dir = opendir("."); // opendir() is included in dirent.h and opens a directory specified in the brackets
+	// in this case the "." which represents the current directory
 
+	// checking if the directory exists
 	if(dir == NULL){
 		return;
 	}
 	
 	struct dirent* entity;
-	entity = readdir(dir);
+	entity = readdir(dir); // reading the contents of the directory
 	
 	while(entity != NULL){
-		if(f_size == 0){
-		printf("%s\n", entity->d_name);
-		entity = readdir(dir);
+		if(f_size == 0){ // if no flags have been entered
+		printf("%s\n", entity->d_name); // printing the names (d_name) of files and directories in the current directory 
+		entity = readdir(dir); // reading the next file/directory 
 		}
 
 		for(int i = 0; i < f_size; i++){
