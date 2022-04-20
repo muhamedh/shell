@@ -212,7 +212,10 @@ void uptime(char flags[10], int f_size, char file_name[128], int output){
 
 	}
 
+	// flags
 	for(int i = 0; i < f_size; i++){
+
+		// -p (pretty) flag changes the color of the uptime command and makes the output easily readable
 		if(flags[i] == 'p'){
 			red();
 			printf("uptime: ");
