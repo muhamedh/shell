@@ -119,8 +119,9 @@ void mkdir_c(char flags[10], int f_size, char name[128], int n_size){
 }
 
 void ls(char flags[10], int f_size){
-	DIR* dir = opendir("."); // opendir() is included in dirent.h and opens a directory specified in the brackets
+	// opendir() is included in dirent.h and opens a directory stream specified in the brackets
 	// in this case the "." which represents the current directory
+	DIR* dir = opendir(".");
 
 	// checking if the directory exists
 	if(dir == NULL){
@@ -136,25 +137,32 @@ void ls(char flags[10], int f_size){
 		entity = readdir(dir); // reading the next file/directory 
 		}
 
+		/*
+		* -c (color) flag
+		* checks if the entity type is directory or file and changes the output color accordingly
+		* directories are purple, files are green
+		*/
 		for(int i = 0; i < f_size; i++){
 			if(flags[i] == 'c'){
-				if(entity->d_type == DT_DIR){
-					purple();
-					printf("%s\n", entity->d_name);
-					reset();
+				// checking if entity type (d_type) is a directory (DT_DIR)
+				if(entity->d_type == DT_DIR){ 
+					purple(); // changes color to purple
+					printf("%s\n", entity->d_name); // prints the entity
+					reset(); // resets text to default color
 				}
 
-				else if(entity->d_type == DT_REG){
+				else if(entity->d_type == DT_REG){ // checking if entity type (d_type) is a file (DT_REG)
 					green();
 					printf("%s\n", entity->d_name);
 					reset();	
 				}
 			}
-		entity = readdir(dir);
+		entity = readdir(dir); // reading the contents of the directory
 		}
 	}
-	closedir(dir);
+	closedir(dir); // closes the directory stream
 
+	// more flags
 	for(int i = 0; i < f_size; i++){
 		if(flags[i] == 'h'){
 			printf("List FILEs in current directory\n");
