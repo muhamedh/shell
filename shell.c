@@ -182,12 +182,12 @@ void uptime(char flags[10], int f_size, char file_name[128], int output){
     int hours = (int)(secs/3600);
     int minutes = ((int)secs/60) % 60;
 	int seconds = (int)(secs%60);
-		
-	if(f_size == 0){
-		if(output == 0){
+
+	if(output == 0 && f_size == 0){
 			printf("uptime: %d:%d:%d\n", hours, minutes, seconds);
 		}
 		
+	if(f_size == 0){
 		if(output == 1){
 			FILE * file;
 			file_name[strcspn(file_name, "\n")] = 0;
@@ -359,7 +359,7 @@ void router(char input[1024]){
 
 	char function[10] = "";
 	char flags[10] = "";
-	int output;
+	int output = 0;
 	char file_name[128] = "";
 	int fun_counter = 0;
 	int flag_counter = 0;
