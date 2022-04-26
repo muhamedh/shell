@@ -49,6 +49,8 @@ System calls are necessary in the operating system in a variety of situations:
 
 -processes are created and managed via system calls.
 
+In order to execute a system call a program needs to execute a special trap instruction. This instruction accesses the kernel and switches the mode to kernel mode. The code which the trap runs is stored inside a trap table which the kernel sets up at boot time. In the kernel, the system (if allowed) can perform any privileged operations which are needed and do the required work for the calling process. On completion, the operating system calls a return-from-trap instruction which returns into the program and switches to user mode.
+
 ## Description
 
 The shell implements all the project tasks except for piping. Additional commands were implemented such as: `clear` which clears the screen and `exit` which exits the shell. The help page for the entire shell will be listed in the following section.
