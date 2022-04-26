@@ -49,7 +49,7 @@ System calls are necessary in the operating system in a variety of situations:
 
 -processes are created and managed via system calls.
 
-In order to execute a system call a program needs to execute a special trap instruction. This instruction accesses the kernel and switches the mode to kernel mode. The code which the trap runs is stored inside a trap table which the kernel sets up at boot time. In the kernel, the system (if allowed) can perform any privileged operations which are needed and do the required work for the calling process. On completion, the operating system calls a return-from-trap instruction which returns into the program and switches to user mode.
+In order to execute a system call a program needs to execute a special trap instruction. This instruction accesses the kernel and switches the mode to kernel mode. The code which the trap runs is stored inside a trap table which the kernel sets up at boot time. In the kernel, the system (if allowed) can perform any privileged operations which are needed and do the required work for the calling process. On completion, the operating system calls a return-from-trap instruction which returns into the program, switches to user mode and begins running the process.
 
 ## Description
 
